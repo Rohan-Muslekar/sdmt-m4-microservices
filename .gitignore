@@ -10,7 +10,7 @@ venv/
 
 # generated report
 *.html
-101006689-ms4-report.pdf
+101006689-ms4*.pdf
 
 # os / editor
 .DS_Store

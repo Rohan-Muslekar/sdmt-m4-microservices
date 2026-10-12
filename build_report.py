@@ -180,12 +180,22 @@ TEMPLATE = """<!doctype html>
     border-collapse: collapse; width: 100%; margin: 1em 0;
     font-size: 10pt; page-break-inside: avoid;
     border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    /* Fixed layout divides the width evenly instead of letting one long
+       literal set a column's width and push the table past the page edge.
+       A printed page cannot scroll, so every cell has to wrap instead. */
+    table-layout: fixed;
   }
+  table code {
+    /* Break inside a long token like attributes.function="convert" rather
+       than forcing the column wider than the page. */
+    overflow-wrap: anywhere; word-break: break-word;
+  }
+  td, th { overflow-wrap: anywhere; }
   thead th {
     background: var(--navy); color: #fff; font-weight: 600;
     text-align: left; padding: 9px 11px;
   }
-  tbody td { padding: 8px 11px; border-top: 1px solid var(--line); vertical-align: top; }
+  tbody td { padding: 8px 11px; border-top: 1px solid var(--line); vertical-align: top; hyphens: auto; }
   tbody tr:nth-child(even) { background: var(--soft); }
 
   figure {
