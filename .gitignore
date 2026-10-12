@@ -1,0 +1,18 @@
+# service account keys - never commit
+*.json
+ms4-pubsub-key.json
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# generated report
+*.html
+101006689-ms4-report.pdf
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
