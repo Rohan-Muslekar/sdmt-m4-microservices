@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recorder-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: recorder
+  template:
+    metadata:
+      labels:
+        app: recorder
+    spec:
+      containers:
+        - image: $RECORDER_IMAGE
+          name: recorder
+          env:
+            - name: POSTGRES_HOST
+              value: postgres
+            - name: GCP_PROJECT
+              value: $PROJECT
+            - name: ELECTION_SUB_ID
+              value: election-record-sub
+            - name: TOPIC_NAME
+              value: election
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - image: $POSTGRES_IMAGE
+          name: postgres
+          env:
+            - name: POSTGRES_DB
+              value: election
+            - name: POSTGRES_USER
+              value: admin
+            - name: POSTGRES_PASSWORD
+              value: adminpassword
+          ports:
+            - containerPort: 5432
+              name: postgres
+---
+    

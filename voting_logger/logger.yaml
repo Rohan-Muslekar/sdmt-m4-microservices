@@ -1,0 +1,62 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logger-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: logger
+  template:
+    metadata:
+      labels:
+        app: logger
+    spec:
+      containers:
+        - image: $LOGGER_IMAGE
+          name: logger
+          env:
+            - name: REDIS_HOST
+              value: redis
+            - name: GCP_PROJECT
+              value: $PROJECT
+            - name: ELECTION_SUB_ID
+              value: election-submit-sub
+            - name: TOPIC_NAME
+              value: election
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: redis
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - image: bitnami/redis:latest
+          name: redis
+          env:
+            - name: REDIS_PASSWORD
+              value: election
+          ports:
+            - containerPort: 6379
+              name: redis
+--- 

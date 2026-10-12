@@ -1,0 +1,24 @@
+version: '2'
+
+#networks:
+#  logger_network:
+#    driver: bridge
+  
+services:
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_PASSWORD=election
+    ports:
+      - 6379:6379
+    #networks:
+    #  - logger_network
+  election-logger:
+    image: logger
+    environment:
+      - REDIS_HOST=redis
+      - GCP_PROJECT=thematic-grin-413119
+      - ELECTION_SUB_ID=ex_election-submit-sub
+      - TOPIC_NAME=ex_election
+    #networks:
+    #  - logger_network

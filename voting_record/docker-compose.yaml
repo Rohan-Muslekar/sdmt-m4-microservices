@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:14.1-alpine
+    hostname: postgres
+    environment:
+      POSTGRES_DB: 'election'   
+      POSTGRES_USER: 'admin'
+      POSTGRES_PASSWORD: 'adminpassword'      
+    ports:
+      - 5432:5432
+    volumes:
+      - ./dump/:/docker-entrypoint-initdb.d
+  election-record:
+    image: record
+    environment:
+      - POSTGRES_HOST=postgres
+      - GCP_PROJECT=thematic-grin-413119
+      - ELECTION_SUB_ID=ex_election-record-sub
+      - TOPIC_NAME=ex_election
